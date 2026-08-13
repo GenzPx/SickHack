@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (contoh: 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Generate signing keystore
+        run: |
+          keytool -genkeypair -v \
+            -keystore release.jks -storepass sickhack123 -keypass sickhack123 \
+            -alias sickhack -keyalg RSA -keysize 2048 -validity 10000 \
+            -dname "CN=SickHack, OU=Mobile, O=GenzPX, L=Jakarta, ST=Jakarta, C=ID"
+
+      - name: Build release APK
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          name: SickHack v${{ inputs.version }}
+          body: |
+            ## SickHack v${{ inputs.version }}
+
+            **>/ SickHack** — terminal pentest toolkit for Android.
+
+            ### Isi rilis
+            - APK release siap install: `app-release.apk`
+            - Mode: Browser (manual inject) + Auto Scanner (full sweep)
+            - 20 tools, >> 300 payload
+            - Author: GenzPX — Repo: https://github.com/GenzPx/SickBar
+
+            ### Cara install
+            1. Download `app-release.apk`
+            2. Buka di Android (minSdk 24 / Android 7+)
+            3. Izinkan "Install from unknown sources"
+            4. Jalankan — gunakan hanya untuk edukasi & authorized testing
+
+            ### Disclaimer
+            Untuk edukasi & authorized security testing saja. Dilarang dipakai
+            terhadap sistem tanpa izin tertulis. Author tidak bertanggung jawab
+            atas penyalahgunaan.
+          files: app/build/outputs/apk/release/app-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT || github.token }}
