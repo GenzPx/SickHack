@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.png" alt="SickHack" width="720">
+</p>
+
 # >/ SickHack
 
 **Terminal pentest toolkit for Android** — by **GenzPX**.
