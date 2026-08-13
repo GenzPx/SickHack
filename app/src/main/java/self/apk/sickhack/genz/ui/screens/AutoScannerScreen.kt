@@ -66,7 +66,7 @@ fun AutoScannerScreen(onBack: () -> Unit) {
                     progressText = "// menyiapkan payload..."
                     job = scope.launch {
                         val result = Scanner.fullScan(
-                            target = target,
+                            targetRaw = target,
                             onProgress = { p ->
                                 progressText = p.text
                                 done = p.done
