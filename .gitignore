@@ -1,25 +1,22 @@
-# Gradle
-build/
-.gradle/
-gradle-app.setting
-
-# Local / IDE
-local.properties
-.idea/
 *.iml
+.gradle/
+/local.properties
+/.idea/
 .DS_Store
-captures/
+/build/
+/captures/
 .externalNativeBuild/
 .cxx/
-
-# Android artifacts
+local.properties
+/app/build/
 *.apk
 *.aab
 *.ap_
 *.dex
-output.json
-
-# Keystore / secrets
-*.jks
-*.keystore
-release.jks
+*.class
+bin/
+gen/
+out/
+*.log
+.env
+.env.local
